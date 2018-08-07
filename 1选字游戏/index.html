@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8">
+		<!-- title 标题 -->
+		<title>选字游戏</title>
+		<!-- 引入CSS -->
+		<link rel="stylesheet" type="text/css" href="css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="css/index.css"/>
+	</head>
+
+	<body>
+		<div class="wrap">
+			<div id="time">剩余时间:60</div>
+			<div id="count">数量:0</div>
+			<div id="question">字</div>
+			<ul id="answer">
+				<li>红</li>
+				<li>黄</li>
+				<li>蓝</li>
+				<li>绿</li>
+				<li>紫</li>
+			</ul>
+		</div>
+
+		<script>
+			//获取ID为XX的DOM对象函数
+			function $(obj){
+				return document.getElementById(obj);
+			}
+			//获取随机数的函数
+			function randomNum(min,max){
+				return Math.floor(Math.random()*(max-min+1)+min);
+			}
+			//定义两个数组，一个数组用来存放文字，一个用来存放颜色值
+			var texts = ["红","黄","蓝","绿","紫"];
+			var colors = ["red","yellow","blue","green","purple"];
+			var answer;
+			//随机题目
+			function randomQuestion(){
+				$('question').innerHTML = texts[randomNum(0,4)];
+				var color = colors[randomNum(0,4)];
+				$('question').style.color = color;
+				if(color == "red"){
+					answer = "红";
+				}else if(color == "yellow"){
+					answer = "黄"
+				}else if(color == "blue"){
+					answer = "蓝"
+				}else if(color == "green"){
+					answer = "绿"
+				}else if(color == "purple"){
+					answer = "紫"
+				}
+			}
+			randomQuestion();
+			//洗牌
+			function randomArray(arr){
+				for(var i=0;i<arr.length;i++){
+					var num = randomNum(0,arr.length - 1);
+					if(i != num){
+						var temp = arr[i];
+						arr[i] = arr[num];
+						arr[num] = temp;
+					}
+				}
+			}
+			//随机答案
+			var list = $("answer").getElementsByTagName("li");
+
+			function randomAnswer(){
+				randomArray(texts);
+				randomArray(colors);
+				for(var i=0;i<list.length;i++){
+					list[i].innerHTML = texts[i];
+					list[i].style.color = colors[i];
+				}
+			}
+			randomAnswer();
+
+			// 剩余时间
+			var time = 60;
+			function xTime(){
+				time--;
+				$("time").innerHTML = "剩余时间"+time;
+				if(time == 0){
+					clearInterval(timer);
+					alert("游戏结束");
+				}
+			}
+			var timer = setInterval(xTime,1000);
+
+			//计分数
+			var count = 0;
+			for(var i=0;i<list.length;i++){
+				list[i].onclick = function(){
+					//console.log(list[i].innerHTML);
+					if(this.innerHTML == answer){
+						count++;
+						$("count").innerHTML = "数量" + count;
+					}
+					randomQuestion();
+					randomAnswer();
+				}
+			}
+		</script>
+
+	</body>
+
+</html>
